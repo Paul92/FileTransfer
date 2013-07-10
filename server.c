@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<strings.h>
 
 #include<sys/types.h>
 #include<sys/socket.h>
@@ -16,15 +17,15 @@ int serverFileTransfer(int port){
 
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = port;
-    serv_addr.sin_addr.s.addr = INADDR_ANY;
+    serv_addr.sin_addr.s_addr = INADDR_ANY;
 
     if(bind(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
         errorOnBinding();
 
     listen(sockfd, 5);
 
-    cilen = sizeof(cli_addr);
-    newsockfd = accept(sockfd, (struct sockaddr*)&cli_addr, &cilen);
+    int cilen = sizeof(cli_addr);
+    int newsockfd = accept(sockfd, (struct sockaddr*)&cli_addr, &cilen);
     if(newsockfd < 0)
         errorOnAccept();
 
@@ -38,6 +39,6 @@ int serverFileTransfer(int port){
 }
 
 int main(int argc, char** argv){
-    serverFileTransfer(argv[0], argv[1]);
+    serverFileTransfer(atoi(argv[0]));
     return 0;
 }
