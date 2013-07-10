@@ -1,9 +1,12 @@
 #include<stdio.h>
+#include<strings.h>
 
 #include<sys/types.h>
 #include<sys/socket.h>
 #include<netinet/in.h>
 #include<netdb.h>
+
+#include "error.h"
 
 int clientFileTransfer(char *ip, int port){
     
@@ -20,9 +23,9 @@ int clientFileTransfer(char *ip, int port){
 
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = port;
-    bcopy((char*) server -> h_addr, (char*) &server_addr.sin_addr.s_addr, server -> h_length);
+    bcopy((char*) server -> h_addr, (char*) &serv_addr.sin_addr.s_addr, server -> h_length);
 
-    if(connect(sockfd, &serv_addr, sizeof(serv_addr)) < 0)
+    if(connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
         errorConnecting();
 
     char buffer[1000];
@@ -36,6 +39,6 @@ int clientFileTransfer(char *ip, int port){
 }
 
 int main(int argc, char** argv){
-    clientFileTransfer(argv[0], argv[1]);
+    clientFileTransfer(argv[0], atoi(argv[1]));
     return 0;
 }
