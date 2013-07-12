@@ -10,6 +10,7 @@
 #include<netdb.h>
 
 #include "error.h"
+#include "ftransLib.h"
 
 int clientFileTransfer(char *ip, int port){
     
@@ -31,7 +32,7 @@ int clientFileTransfer(char *ip, int port){
     if(connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
         errorConnecting();
 
-    char buffer[1000];
+    char buffer[BUFFER_SIZE];
     bzero(buffer, sizeof(buffer));
     
     int n = write(sockfd, "CRAP", 4);

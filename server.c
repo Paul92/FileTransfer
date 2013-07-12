@@ -10,6 +10,7 @@
 #include<netdb.h>
 
 #include "error.h"
+#include "ftransLib.h"
 
 int serverFileTransfer(int port){
 
@@ -35,7 +36,7 @@ int serverFileTransfer(int port){
     if(newsockfd < 0)
         errorOnAccept();
 
-    char buffer[1000];
+    char buffer[BUFFER_SIZE];
     bzero(buffer, sizeof(buffer));
 
     int n = read(newsockfd, buffer, sizeof(buffer));
