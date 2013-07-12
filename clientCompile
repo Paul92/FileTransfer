@@ -1,0 +1,4 @@
+gcc -Wall -O1 -c -lm client.c -o client.o
+gcc -Wall -O1 -c -lm error.c -o error.o
+gcc -Wall -O1 -lm error.o client.o -o client
+
