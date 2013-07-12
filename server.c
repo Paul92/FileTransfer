@@ -1,10 +1,15 @@
 #include<stdio.h>
 #include<strings.h>
+#include<stdlib.h>
+
+#include<unistd.h>
 
 #include<sys/types.h>
 #include<sys/socket.h>
 #include<netinet/in.h>
 #include<netdb.h>
+
+#include "error.h"
 
 int serverFileTransfer(int port){
 
@@ -39,6 +44,6 @@ int serverFileTransfer(int port){
 }
 
 int main(int argc, char** argv){
-    serverFileTransfer(atoi(argv[0]));
+    serverFileTransfer(atoi(argv[1]));
     return 0;
 }
