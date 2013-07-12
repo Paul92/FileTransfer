@@ -21,15 +21,16 @@ int serverFileTransfer(int port){
     bzero((char*) &serv_addr, sizeof(serv_addr));
 
     serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = port;
+    serv_addr.sin_port = htons(port);
     serv_addr.sin_addr.s_addr = INADDR_ANY;
+
 
     if(bind(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
         errorOnBinding();
 
     listen(sockfd, 5);
 
-    int cilen = sizeof(cli_addr);
+    socklen_t cilen = sizeof(cli_addr);
     int newsockfd = accept(sockfd, (struct sockaddr*)&cli_addr, &cilen);
     if(newsockfd < 0)
         errorOnAccept();

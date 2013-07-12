@@ -26,7 +26,6 @@ int clientFileTransfer(char *ip, int port){
 
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(port);
-    printf("%s", ip);
     bcopy((char*) server -> h_addr, (char*) &serv_addr.sin_addr.s_addr, server -> h_length);
 
     if(connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
@@ -34,8 +33,8 @@ int clientFileTransfer(char *ip, int port){
 
     char buffer[1000];
     bzero(buffer, sizeof(buffer));
-
-    int n = write(sockfd, "CRAP", 5);
+    
+    int n = write(sockfd, "CRAP", 4);
     if(n < 0)
         errorWritingOnSocket();
 
