@@ -12,7 +12,7 @@
 #include "error.h"
 #include "ftransLib.h"
 
-int clientFileTransfer(char *ip, int port){
+int clientFileTransfer(char *ip, int port, char* filename){
     
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if(sockfd < 0)
@@ -32,17 +32,12 @@ int clientFileTransfer(char *ip, int port){
     if(connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
         errorConnecting();
 
-    char buffer[BUFFER_SIZE];
-    bzero(buffer, sizeof(buffer));
-    
-    int n = write(sockfd, "CRAP", 4);
-    if(n < 0)
-        errorWritingOnSocket();
+    fileRead(filename, sockfd);
 
     return 0;
 }
 
 int main(int argc, char** argv){
-    clientFileTransfer(argv[1], atoi(argv[2]));
+    clientFileTransfer(argv[1], atoi(argv[2]), argv[3]);
     return 0;
 }
