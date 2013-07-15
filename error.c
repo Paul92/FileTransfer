@@ -24,3 +24,7 @@ void errorConnecting(){
 void noServerFound(){
 	printf("No server found");
 }
+
+void errorOpeningFile(){
+    printf("Can't open file");
+}

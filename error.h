@@ -9,3 +9,4 @@ void noServerFound();
 
 //COMMON ERRORS
 void errorOpeningSocket();
+void errorOpeningFile();
