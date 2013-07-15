@@ -19,6 +19,29 @@ void itoa(int a, char buff[32]){
     for(; i>=0; buff[size - i] = temp[i], i--);
 }
 
+void loader(int val, int max, int size){
+
+    static int lastPrinted = 0;
+
+    int percent = (100.*val)/max;
+    int count = ((float)percent * size) / 100;
+
+    if(count == lastPrinted)
+        return;
+
+    lastPrinted = count;
+    printf("\r[");
+
+    int i;
+    for(i = 0; i < count; i++)
+        printf("#");
+    for(; i < size; i++)
+        printf(".");
+
+    printf("] %d%%", percent);
+    fflush(stdout);
+}
+
 void fileRead(char *filename, int sockfd){
 
     FILE *f = fopen(filename, "rb");
@@ -36,12 +59,18 @@ void fileRead(char *filename, int sockfd){
     itoa(fileSize, size);
     write(sockfd, size, 32);
 
+    int n = 0; //total bytes read/written
     char buffer[BUFFER_SIZE];
     while(!feof(f)){
         int read = fread(buffer, 1, BUFFER_SIZE, f);
-        write(sockfd, buffer, read);
         if(read < 0)
             errorWritingOnSocket();
+
+        write(sockfd, buffer, read);
+
+        n += read;
+        loader(n, fileSize, LOADER_LENGTH);
+
     }
 
     fclose(f);
@@ -59,15 +88,16 @@ void fileWrite(char *filename, int sockfd){
 
     char sz[32];
     read(sockfd, sz, 32);
-    int size = atoi(sz);
+    int fileSize = atoi(sz);
 
     char buffer[BUFFER_SIZE];
     int n = 0;
-    while(n < size){
+    while(n < fileSize){
         int readed = read(sockfd, buffer, BUFFER_SIZE);
         write(fileno(f), buffer, readed);
-        printf("%d\n", n);
+
         n += readed;
+        loader(n, fileSize, LOADER_LENGTH);
     }
 
     fclose(f);
