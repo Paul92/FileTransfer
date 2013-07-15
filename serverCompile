@@ -1,4 +1,5 @@
 gcc -Wall -O1 -c -lm server.c -o server.o
 gcc -Wall -O1 -c -lm error.c -o error.o
-gcc -Wall -O1 -lm error.o server.o -o server
+gcc -Wall -O1 -c -lm ftransLib.c -o ftranslib.o
+gcc -Wall -O1 -lm error.o server.o ftranslib.o -o server
 
