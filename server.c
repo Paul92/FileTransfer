@@ -12,7 +12,7 @@
 #include "error.h"
 #include "ftransLib.h"
 
-int serverFileTransfer(int port){
+int serverFileTransfer(int port, char* filename){
 
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if(sockfd<0)
@@ -36,16 +36,12 @@ int serverFileTransfer(int port){
     if(newsockfd < 0)
         errorOnAccept();
 
-    char buffer[BUFFER_SIZE];
-    bzero(buffer, sizeof(buffer));
-
-    int n = read(newsockfd, buffer, sizeof(buffer));
-    printf("MESSAGE: %s", buffer);
+    fileWrite(filename, newsockfd);
 
     return 0;
 }
 
 int main(int argc, char** argv){
-    serverFileTransfer(atoi(argv[1]));
+    serverFileTransfer(atoi(argv[1]), argv[2]);
     return 0;
 }
