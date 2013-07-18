@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<strings.h>
 #include<stdlib.h>
+#include<string.h>
 
 #include<unistd.h>
 
@@ -19,7 +20,7 @@ int serverFileTransfer(int port, char* filename){
         errorOpeningSocket();
     
     struct sockaddr_in serv_addr, cli_addr;
-    bzero((char*) &serv_addr, sizeof(serv_addr));
+    memset((char*) &serv_addr, 0, sizeof(serv_addr));
 
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(port);
