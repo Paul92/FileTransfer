@@ -10,3 +10,8 @@ void noServerFound();
 //COMMON ERRORS
 void errorOpeningSocket();
 void errorOpeningFile();
+
+//I/O ERRORS
+void errorReadingFromFile();
+void errorReadingFromSocket();
+

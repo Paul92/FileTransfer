@@ -28,3 +28,11 @@ void noServerFound(){
 void errorOpeningFile(){
     printf("Can't open file");
 }
+
+void errorReadingFromFile(){
+    printf("Can't read from file");
+}
+
+void errorReadingFromSocket(){
+    printf("Can't read from socket");
+}
