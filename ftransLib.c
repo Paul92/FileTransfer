@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/sendfile.h>
@@ -46,6 +47,18 @@ void fileRead(char *filename, int sockfd){
     sprintf(size, "%d", fileSize);
     write(sockfd, size, 32);
 
+    char *name = strrchr(filename, '/');
+    if(name == NULL)
+        name = filename;
+    else
+        name++;
+
+    char fileNameSize = strlen(name)+1;
+    write(sockfd, &fileNameSize, 1);  //WARNING! it works only for files
+                                           //with at most 255 characters
+
+    write(sockfd, name, strlen(name)+1);
+
     int n = 0; //total bytes read/written
     char buffer[BUFFER_SIZE];
     while(!feof(f)){
@@ -63,23 +76,33 @@ void fileRead(char *filename, int sockfd){
 }
 
 
-void fileWrite(char *filename, int sockfd){
-
-    FILE *f = fopen(filename, "wb");
-
-    if(f == NULL){
-        errorOpeningFile();
-        return;
-    }
+void fileWrite(int sockfd){
 
     char sz[32];
     read(sockfd, sz, 32);
     int fileSize = atoi(sz);
 
+    char fileNameSize;
+    int readed = read(sockfd, &fileNameSize, 1);
+    if(readed < 0)
+        errorReadingFromSocket();
+    else if(fileNameSize == 0)
+        errorBadFileName();
+
+    char filename[256];
+    readed = read(sockfd, filename, fileNameSize);
+    if(readed < 0)
+        errorReadingFromSocket();
+
+    FILE *f = fopen(filename, "wb");
+    if(f == NULL){
+        errorOpeningFile();
+    }
+
     char buffer[BUFFER_SIZE];
     int n = 0;
     while(n < fileSize){
-        int readed = read(sockfd, buffer, BUFFER_SIZE);
+        readed = read(sockfd, buffer, BUFFER_SIZE);
         if(readed < 0)
             errorReadingFromSocket();
 

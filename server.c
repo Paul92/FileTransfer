@@ -37,7 +37,7 @@ int serverFileTransfer(int port, char* filename){
     if(newsockfd < 0)
         errorOnAccept();
 
-    fileWrite(filename, newsockfd);
+    fileWrite(newsockfd);
 
     return 0;
 }
