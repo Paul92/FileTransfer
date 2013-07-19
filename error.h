@@ -14,4 +14,4 @@ void errorOpeningFile();
 //I/O ERRORS
 void errorReadingFromFile();
 void errorReadingFromSocket();
-
+void errorBadFileName();

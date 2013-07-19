@@ -1,4 +1,4 @@
-#include<error.h>
+#include "error.h"
 #include<stdio.h>
 
 void errorOpeningSocket(){
@@ -35,4 +35,8 @@ void errorReadingFromFile(){
 
 void errorReadingFromSocket(){
     printf("Can't read from socket");
+}
+
+void errorBadFileName(){
+    printf("Bad file name");
 }
