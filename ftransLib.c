@@ -21,7 +21,7 @@ void loader(int val, int max, int size, int row){
 
     if(row > 0){
         printf("\033[s"); //save current position
-        printf("\033[%dB", row);
+        printf("\033[%dB\n", row);
     }
 
     lastPrinted = count;
@@ -34,7 +34,8 @@ void loader(int val, int max, int size, int row){
         printf(".");
 
     printf("] %d%%", percent);
-    printf("\033[u");
+    if(row > 0)
+        printf("\033[u");
     fflush(stdout);
 }
 
