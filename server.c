@@ -15,11 +15,6 @@
 #include "error.h"
 #include "ftransLib.h"
 
-struct fileWriteArgs{
-    int childNumber;
-    int sockfd;
-}
-
 int serverFileTransfer(int port, char* filename){
 
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);

@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <sys/sendfile.h>
 
+#include <pthread.h>
+
 #include "error.h"
 #include "ftransLib.h"
 
@@ -81,11 +83,11 @@ void fileRead(char *filename, int sockfd){
     fclose(f);
 }
 
-pthread_mutex_t STDOUT_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t STDOUT_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void* fileWrite(void *fd){
 
-    struct fileWriteArgs *p = (struct fileWriteArgs*)fd
+    struct fileWriteArgs *p = (struct fileWriteArgs*)fd;
     int sockfd = p->sockfd;
     int childNumber = p->childNumber;
 
