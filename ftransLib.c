@@ -7,7 +7,7 @@
 #include "error.h"
 #include "ftransLib.h"
 
-void loader(int val, int max, int size){
+void loader(int val, int max, int size, int row){
 
     static int lastPrinted = 0;
 
@@ -16,6 +16,11 @@ void loader(int val, int max, int size){
 
     if(count == lastPrinted)
         return;
+
+    if(row > 0){
+        printf("\033[s"); //save current position
+        printf("\033[%dB", row);
+    }
 
     lastPrinted = count;
     printf("\r[");
@@ -27,6 +32,7 @@ void loader(int val, int max, int size){
         printf(".");
 
     printf("] %d%%", percent);
+    printf("\033[u");
     fflush(stdout);
 }
 
@@ -69,7 +75,7 @@ void fileRead(char *filename, int sockfd){
         write(sockfd, buffer, read);
 
         n+=read;
-        loader(n, fileSize, LOADER_LENGTH);
+        loader(n, fileSize, LOADER_LENGTH, 0);
     }
 
     fclose(f);
@@ -79,7 +85,9 @@ pthread_mutex_t STDOUT_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void* fileWrite(void *fd){
 
-    int sockfd = *(int*)fd;
+    struct fileWriteArgs *p = (struct fileWriteArgs*)fd
+    int sockfd = p->sockfd;
+    int childNumber = p->childNumber;
 
     char sz[32];
     read(sockfd, sz, 32);
@@ -114,7 +122,7 @@ void* fileWrite(void *fd){
         n += readed;
 
         pthread_mutex_lock(&STDOUT_mutex);
-        loader(n, fileSize, LOADER_LENGTH);
+        loader(n, fileSize, LOADER_LENGTH, childNumber);
         pthread_mutex_unlock(&STDOUT_mutex);
     }
 

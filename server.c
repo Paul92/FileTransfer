@@ -15,6 +15,11 @@
 #include "error.h"
 #include "ftransLib.h"
 
+struct fileWriteArgs{
+    int childNumber;
+    int sockfd;
+}
+
 int serverFileTransfer(int port, char* filename){
 
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -41,12 +46,20 @@ int serverFileTransfer(int port, char* filename){
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
+    int noOfChilds = 0;
+
     while(1){
         int newsockfd = accept(sockfd, (struct sockaddr*)&cli_addr, &cilen);
+        noOfChilds++;
+
+        struct fileWriteArgs args;
+        args.sockfd = newsockfd;
+        args.childNumber = noOfChilds;
+
         if(newsockfd < 0)
             errorOnAccept();
 
-        pthread_create(&newThread, &attr, &fileWrite, &newsockfd);
+        pthread_create(&newThread, &attr, &fileWrite, &args);
 
     }
 
