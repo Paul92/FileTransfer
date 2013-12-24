@@ -10,6 +10,8 @@
 #include<netinet/in.h>
 #include<netdb.h>
 
+#include<pthread.h>
+
 #include "error.h"
 #include "ftransLib.h"
 
@@ -33,11 +35,22 @@ int serverFileTransfer(int port, char* filename){
     listen(sockfd, 5);
 
     socklen_t cilen = sizeof(cli_addr);
-    int newsockfd = accept(sockfd, (struct sockaddr*)&cli_addr, &cilen);
-    if(newsockfd < 0)
-        errorOnAccept();
 
-    fileWrite(newsockfd);
+    pthread_t newThread;
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+
+    while(1){
+        int newsockfd = accept(sockfd, (struct sockaddr*)&cli_addr, &cilen);
+        if(newsockfd < 0)
+            errorOnAccept();
+
+        pthread_create(&newThread, &attr, &fileWrite, &newsockfd);
+
+    }
+
+    pthread_attr_destroy(&attr);
 
     return 0;
 }

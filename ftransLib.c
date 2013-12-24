@@ -75,8 +75,11 @@ void fileRead(char *filename, int sockfd){
     fclose(f);
 }
 
+pthread_mutex_t STDOUT_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-void fileWrite(int sockfd){
+void* fileWrite(void *fd){
+
+    int sockfd = *(int*)fd;
 
     char sz[32];
     read(sockfd, sz, 32);
@@ -109,10 +112,15 @@ void fileWrite(int sockfd){
         write(fileno(f), buffer, readed);
 
         n += readed;
+
+        pthread_mutex_lock(&STDOUT_mutex);
         loader(n, fileSize, LOADER_LENGTH);
+        pthread_mutex_unlock(&STDOUT_mutex);
     }
 
     fclose(f);
+
+    return NULL;
 
 }
 

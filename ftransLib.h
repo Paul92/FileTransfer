@@ -2,5 +2,5 @@
 #define LOADER_LENGTH 20
 
 void fileRead(char*, int);
-void fileWrite(int);
+void* fileWrite(void*);
 
